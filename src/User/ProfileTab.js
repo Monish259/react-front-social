@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import avatar from '../images/avatar.png'; 
 import {Link} from 'react-router-dom';
 import {withRouter} from 'react-router';
+import { Container, Row, Col } from 'reactstrap';
 
 class ProfileTab extends Component{
 
@@ -10,10 +11,10 @@ class ProfileTab extends Component{
         const {followers,following,posts} = this.props;
         return (
 
-            <div>
+            <Container>
             
-            <div className = 'row'>
-                <div className = 'col-md-4'>
+            <Row>
+                <Col>
                     <h4 >Followers</h4>
                     <hr />
                     {
@@ -35,9 +36,9 @@ class ProfileTab extends Component{
                             );
                         })
                     }
-                </div>   
+                </Col>   
 
-                <div className = 'col-md-4'>
+                <Col>
                     <h4 >Following</h4>
                     <hr />
                     {
@@ -59,9 +60,9 @@ class ProfileTab extends Component{
                             );
                         })
                     }
-                </div> 
+                </Col> 
 
-                <div className = 'col-md-4'>
+                <Col>
                     <h4 >Posts</h4>
                     <hr />
                     
@@ -81,11 +82,11 @@ class ProfileTab extends Component{
                         })
                     }
 
-                </div>
+                </Col>
 
-            </div>
+            </Row>
 
-            </div>
+            </Container>
 
         );
     }
