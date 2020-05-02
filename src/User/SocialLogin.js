@@ -12,7 +12,7 @@ class SocialLogin extends Component {
     }   
 
     responseGoogle = response => {
-        console.log(response);
+        //console.log(response);
         const { googleId, name, email, imageUrl } = response.profileObj;
         const user = {
             password: googleId,
@@ -35,7 +35,7 @@ class SocialLogin extends Component {
 
     render() {
         const { redirectToHome } = this.state;
-        console.log(" REDIRECT TO HOME !! " , redirectToHome);
+       // console.log(" REDIRECT TO HOME !! " , redirectToHome);
         if (redirectToHome) return <Redirect to="/" />;
 
         return (

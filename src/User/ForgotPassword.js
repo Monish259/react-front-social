@@ -7,6 +7,7 @@ class ForgotPassword extends Component {
     email: "",
     msg: "",
     error: "",
+    loading : false
   };
 
   handleChange = (value) => (event) => {
@@ -15,14 +16,15 @@ class ForgotPassword extends Component {
 
   clickSubmit = (e) => {
     e.preventDefault();
+    this.setState({ loading : true });
     forgotPassword(this.state.email).then((data) => {
-      if (data.error) this.setState({ error: data.error });
-      else this.setState({ msg: data.message, email: "" });
+      if (data.error) this.setState({ error: data.error ,loading : false});
+      else this.setState({ msg: data.message, email: "" ,loading : false});
     });
   };
 
   render() {
-    const { email, msg, error } = this.state;
+    const { email, msg, error ,loading} = this.state;
     return (
       <div className="container">
         <h2 className="mt-5 mb-5">Recover your account</h2>
@@ -42,12 +44,18 @@ class ForgotPassword extends Component {
           </div>
 
           <div className="d-inline-block mt-4">
+          {loading ? (
+            <div className="btn btn-raised btn-secondary">
+              <i className="fa fa-spinner fa-spin" />
+            </div>
+          ) : (
             <button
               onClick={this.clickSubmit}
               className="btn btn-raised btn-primary"
             >
               Submit
             </button>
+          )}
             <Link to={`/signin`} className="btn btn-raised btn-warning ml-5">
               Cancel
             </Link>

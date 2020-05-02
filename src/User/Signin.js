@@ -81,7 +81,7 @@ class Signin extends Component {
                 onClick={this.clickSubmit}
                 className="btn btn-raised btn-primary"
               >
-                Submit
+                Login
               </button>
               <p className="mt-3">
                 <Link

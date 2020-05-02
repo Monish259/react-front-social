@@ -6,6 +6,7 @@ import avatar from '../images/avatar.png';
 import DeleteUser from './DeleteUser';
 import FollowButton from './FollowButton';
 import ProfileTab from './ProfileTab';
+import { Row, Col } from 'reactstrap';
 
 class Profile extends Component {
     constructor(props){
@@ -15,7 +16,8 @@ class Profile extends Component {
             redirectToSignin : false,
             following : false,
             error : "",
-            posts : []
+            posts : [],
+            loadingFollow : false
         };
     }
 
@@ -37,14 +39,14 @@ class Profile extends Component {
         const followId = this.state.user._id;   //following state member will be changed after calling this function
         const token = isAuthenticated().token;
        // console.log("onClick Follow fired !!!!");
-
+        this.setState({ loadingFollow : true });
         clickFollow(userId,followId,token)
         .then( (data) => {
-            if(data.error) this.setState({ error : data.error });
+            if(data.error) this.setState({ error : data.error ,loadingFollow : false});
             else {
                 //checking if following is an object or boolean then saving it in state accordingly 
                 let check =  typeof (this.state.following) === 'object' ? (this.state.following[this.state.following.length-1]) : (this.state.following) ;
-                this.setState({ user : data , following : !check });
+                this.setState({ user : data , following : !check ,loadingFollow : false});
             }
         });
 
@@ -55,13 +57,13 @@ class Profile extends Component {
         const userId = isAuthenticated().user._id;
         const unFollowId = this.state.user._id;   //following state member will be changed after calling this function
         const token = isAuthenticated().token;
-
+        this.setState({ loadingFollow : true });
         clickUnFollow(userId,unFollowId,token)
         .then( (data) => {
-            if(data.error) this.setState({ error : data.error });
+            if(data.error) this.setState({ error : data.error ,loadingFollow : false});
             else {
                 let check =  typeof (this.state.following) === 'object' ? (this.state.following[this.state.following.length-1]) : (this.state.following) ;
-                this.setState({ user : data , following : !check });
+                this.setState({ user : data , following : !check ,loadingFollow : false});
             }
         });
 
@@ -105,16 +107,25 @@ class Profile extends Component {
          // console.log('user_id : ',props.match.params.userId + " WHEN USERID CHANEGD !! ");
           const userId = props.match.params.userId; //this id is that which get passed in MainRouter component from Menu Component.
           this.init(userId);
-      }  
-
+      } 
+    
     render(){
-            const {redirectToSignin,user,following,posts} = this.state;
+            const {redirectToSignin,user,following,posts,loadingDelete,loadingFollow} = this.state;
            // console.log(" INSIDE RENDER : " , following , " TYPE OF FOLLOWING : " , typeof(following));
 
             if(redirectToSignin) return <Redirect to = '/signin'/>;
             //fetching user profile pic from backend and adding time as timestamp so every photo is updated browser show that only not the one store in cache
             const photoUrl = user._id ? `${process.env.REACT_APP_API_URL}/user/photo/${user._id}?${new Date().getTime()}` : avatar;
-
+        if(loadingDelete) {
+            return (
+              <div className="jumbotron text-center">
+                <h2>
+                  <i className="fa fa-spinner fa-spin" /> Loading
+                </h2>
+              </div>
+            );
+          } 
+        else {
         return( //vw meaningview port size  // passing function to onError property in img tag to display default image when any error is there
         <div className = 'container'>
         <h2 className = 'mt-5 mb-5'>Profile</h2>
@@ -131,12 +142,12 @@ class Profile extends Component {
                     </div>
                 {isAuthenticated().user && isAuthenticated().user._id === user._id ?
                 (
-                    <div className = 'd-inline-block'>
-                        <Link to = '/post/create' className = 'btn btn-raised btn-info mr-5'>Create Post</Link>
-                        <Link to = {`/user/edit/${user._id}`} className = 'btn btn-raised btn-success mr-5'>Edit Profile</Link>
-                        <DeleteUser userId={user._id}/>
-                    </div>
-                ) : <FollowButton following={ typeof (following) === 'object' ? (following[following.length-1]) : (following) } onClickFollow = {this.clickFollowButton} onClickUnFollow = {this.clickUnFollowButton} /> 
+                    <Row>
+                       <Col> <Link to = '/post/create' className = 'btn btn-raised btn-info mr-5'>Create Post</Link>    </Col>
+                       <Col> <Link to = {`/user/edit/${user._id}`} className = 'btn btn-raised btn-success mr-5'>Edit Profile</Link>    </Col>
+                       <Col> <DeleteUser userId={user._id}/>    </Col>
+                    </Row>
+                ) : <FollowButton loadingFollow = {loadingFollow} following={ typeof (following) === 'object' ? (following[following.length-1]) : (following) } onClickFollow = {this.clickFollowButton} onClickUnFollow = {this.clickUnFollowButton} /> 
                 }
                 </div>  
 
@@ -155,7 +166,7 @@ class Profile extends Component {
             </div>
 
         </div>
-        )}
+        )}}
 }
 
 export default Profile;

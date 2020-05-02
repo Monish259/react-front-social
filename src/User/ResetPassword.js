@@ -10,7 +10,8 @@ class ResetPassword extends Component {
             newPasswordVerify : "",
             message: "",
             error: "",
-            redirectToSignin : false
+            redirectToSignin : false,
+            loading : false
         };
     }
 
@@ -43,25 +44,34 @@ class ResetPassword extends Component {
 
     resetPassword = (event) => {
         event.preventDefault();
-        this.setState({ message: "", error: "" });
+        this.setState({ message: "", error: "" ,loading : true});
 
         if (this.isValid()) {
           resetPassword(this.state.newPassword,this.props.match.params.resetPasswordToken)
           .then((data) => {
             if (data.error) {
-              console.log(data.error);
-              this.setState({ error: data.error });
+              this.setState({ error: data.error ,loading : false});
             } else {
-              console.log(data.message);
-              this.setState({ message: data.message, newPassword: "" ,newPasswordVerify:"" ,redirectToSignin : true});
+              this.setState({ message: data.message, newPassword: "" ,newPasswordVerify:"" ,redirectToSignin : true , loading : false});
             }
           });
         }
+        else this.setState({ loading : false });
     };
 
     render() {
       if(this.state.redirectToSignin) return <Redirect to = '/' />
 
+      if (this.state.loading) {
+        return (
+          <div className="jumbotron text-center">
+            <h2>
+              <i className="fa fa-spinner fa-spin" /> Loading
+            </h2>
+          </div>
+        )
+      }
+        else {
         return (
           <div className="container">
             <h2 className="mt-5 mb-5">Reset your Password</h2>
@@ -105,6 +115,7 @@ class ResetPassword extends Component {
             </form>
           </div>
         );
+          }
     }
 }
 

@@ -26,11 +26,10 @@ class DeleteUser extends Component{
     }
 
     deletePosts(userId,token){
-        
         deleteAllPosts(userId,token)
         .then( (data) => {
             if(data.error) console.log(data.error);
-            else {console.log(data);}
+            else this.setState({ loading : false })
         });
 
     };

@@ -69,7 +69,7 @@ class Signup extends Component {
                         <label className = "text-muted">Password</label>
                         <input value = {password} onChange = {this.handleChange("password")} type = "password" className = "form-control"/>
                     </div>
-                    <button onClick = {this.clickSubmit} className = "btn btn-raised btn-primary">Submit</button>
+                    <button onClick = {this.clickSubmit} className = "btn btn-raised btn-primary">Sign Up</button>
                 </form>
 
             </div>

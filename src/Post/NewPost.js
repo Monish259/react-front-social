@@ -68,7 +68,7 @@ class NewPost extends Component{
                // console.log(user);
                 create(userId,token,this.postData)
                 .then( (data) => {
-                    if(data.error) this.setState({ error : data.error });
+                    if(data.error) this.setState({ error : data.error ,loading : false});
                     else{
                     //console.log(data);
                      this.setState({ 
@@ -81,9 +81,16 @@ class NewPost extends Component{
             
         }
 
-    createPostForm(title,body){ //edit form also takes image and accepts every type of image
+    createPostForm(title,body,loading){ //edit form also takes image and accepts every type of image
+       
+        if(loading) return (
+        <div className = 'jumbotron text-center'>
+        <h2><i className="fa fa-spinner fa-spin"/>  Loading</h2>
+        </div>
+        );
+
         return (    //accept property of image only shows images when trying to select one
-        <form>
+       <form>
              <div className = "form-group">
                 <label className = "text-muted">Profile Photo</label>   
                 <input onChange = {this.handleChange("photo")} type = "file" accept  = "image/*" className = "form-control"/>
@@ -97,10 +104,9 @@ class NewPost extends Component{
                 <label className = "text-muted">Body</label>
                 <textarea value = {body} onChange = {this.handleChange("body")} type = "text" className = "form-control"/>
             </div>
-
-            <div className = 'd-inline-block'>
+    
                 <button onClick = {this.clickSubmit} className = "btn btn-raised btn-primary">Create Post</button>  
-            </div>
+          
         
         </form>
         );
@@ -118,15 +124,7 @@ class NewPost extends Component{
                 <div className = "alert alert-warning" style = {{ display : error ? "" : "none" }}>
                     {error}
                 </div>
-              
-            {loading ?
-            (   <div className = 'jumbotron text-center'>
-                    <h2>Loading</h2>
-                </div>
-            ) : 
-                ("")
-            }         
-                {this.createPostForm(title,body)}
+                {this.createPostForm(title,body,loading)}
             </div>
         );
     }
